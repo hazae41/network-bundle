@@ -1,0 +1,14 @@
+{
+  "name": "bundle",
+  "version": "1.0.0",
+  "files": [
+    "bundle_bg.wasm",
+    "bundle.js",
+    "bundle.d.ts"
+  ],
+  "module": "bundle.js",
+  "types": "bundle.d.ts",
+  "sideEffects": [
+    "./snippets/*"
+  ]
+}

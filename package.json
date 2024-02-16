@@ -1,0 +1,75 @@
+{
+  "type": "module",
+  "name": "@hazae41/netbundle",
+  "version": "1.2.6",
+  "description": "WebAssembly bundle for Network algorithms",
+  "homepage": "https://github.com/hazae41/netbundle",
+  "repository": "github:hazae41/netbundle",
+  "author": "hazae41",
+  "license": "Unlicense",
+  "main": "./dist/cjs/src/node/index.cjs",
+  "module": "./dist/esm/src/node/index.mjs",
+  "types": "./dist/types/src/node/index.d.ts",
+  "sideEffects": false,
+  "files": [
+    "./dist/esm",
+    "./dist/cjs",
+    "./dist/types"
+  ],
+  "scripts": {
+    "build:wasm": "cd wasm && rimraf pkg && wasm-pack build --target web --release && cd .. && node patch.js",
+    "build:dist": "rimraf dist && rollup -c",
+    "build": "npm run build:wasm && npm run build:dist",
+    "test:node": "node ./dist/test/src/node/index.test.mjs",
+    "test:deno": "deno run -A ./src/deno/mod.test.ts",
+    "test": "npm run test:node && npm run test:deno",
+    "example:deno": "deno run ./example/deno/mod.ts",
+    "example:node": "cd ./example/node && npm ci && node ./index.js",
+    "bench:deno": "cd ./src/deno/bench && deno bench mod.bench.ts",
+    "bench:node": "node ./dist/bench/src/node/index.bench.mjs",
+    "prepare": "npm run build:dist"
+  },
+  "devDependencies": {
+    "@hazae41/deimos": "^1.0.6",
+    "@hazae41/phobos": "^1.0.10",
+    "@hazae41/rimraf": "^1.0.1",
+    "@noble/curves": "^1.2.0",
+    "@rollup/plugin-typescript": "^11.1.5",
+    "@types/node": "^20.8.4",
+    "rollup": "^4.0.2",
+    "rollup-plugin-dts": "^6.1.0",
+    "rollup-plugin-node-externals": "^6.1.2",
+    "supercop.wasm": "^5.0.1",
+    "typescript": "^5.2.2"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/types/src/node/index.d.ts",
+      "import": "./dist/esm/src/node/index.mjs",
+      "require": "./dist/cjs/src/node/index.cjs"
+    }
+  },
+  "keywords": [
+    "reproducible",
+    "webassembly",
+    "cryptography",
+    "curve25519",
+    "ed25519",
+    "x25519",
+    "signing",
+    "signature",
+    "key-exchange",
+    "diffie-hellman",
+    "ecdh",
+    "ecdsa",
+    "eddsa",
+    "browser",
+    "typescript",
+    "rust",
+    "unit-tested",
+    "deno"
+  ],
+  "dependencies": {
+    "@hazae41/box": "^1.0.5"
+  }
+}

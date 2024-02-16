@@ -1,0 +1,21 @@
+[package]
+name = "bundle"
+version = "1.0.0"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib"]
+
+[profile.release]
+lto = true
+debug = false
+opt-level = 3
+
+[dependencies]
+wasm-bindgen = { version = "=0.2.87", default-features = false }
+sha3 = { version = "=0.10.8", default-features = false }
+base16ct = { version = "=0.2.0", default-features = false, features = ["alloc"] }
+getrandom = { version = "=0.2.10", default-features = false, features = ["js"] }
+rand = { version = "=0.8.5", default-features = false, features = ["std", "std_rng"] }
+crypto-bigint = { version = "=0.5.5", default-features = false }
+console_error_panic_hook = "=0.1.7"

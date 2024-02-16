@@ -1,0 +1,16 @@
+on:
+  push:
+    tags:
+    - '*'
+
+name: release
+
+jobs:
+  check:
+    name: check
+    runs-on: ubuntu-22.04
+    steps:
+    - uses: actions/checkout@v3
+    - run: "npm ci"
+    - run: "npm diff --diff=@hazae41/netbundle@${{github.ref_name}} --diff=."
+    - run: "[[ -z $(npm diff --diff=@hazae41/netbundle@${{github.ref_name}} --diff=.) ]]"
