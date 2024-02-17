@@ -10,6 +10,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@hazae41/netbundle": "file:.."
+    "@hazae41/network-bundle": "file:.."
   }
 }

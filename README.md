@@ -1,12 +1,12 @@
-# Netbundle
+# Network Bundle
 
 WebAssembly bundle for Network algorithms
 
 ```bash
-npm i @hazae41/netbundle
+npm i @hazae41/network-bundle
 ```
 
-[**Node Package 📦**](https://www.npmjs.com/package/@hazae41/netbundle)
+[**Node Package 📦**](https://www.npmjs.com/package/@hazae41/network-bundle)
 
 ## Algorithms
 - Keccak256 from RustCrypto (sha3)
@@ -23,7 +23,7 @@ npm i @hazae41/netbundle
 ### Generation
 
 ```tsx
-import { NetworkMixin, base16_decode_mixed, base16_encode_lower, initBundledOnce } from "@hazae41/netbundle"
+import { NetworkMixin, base16_decode_mixed, base16_encode_lower, initBundledOnce } from "@hazae41/network-bundle"
 
 await initBundledOnce()
 
@@ -68,7 +68,7 @@ console.log(totalBigInt, secretsZeroHex, proofsZeroHex)
 #### Secrets
 
 ```tsx
-import { NetworkMixin, base16_decode_mixed, base16_encode_lower, initBundledOnce } from "@hazae41/netbundle"
+import { NetworkMixin, base16_decode_mixed, base16_encode_lower, initBundledOnce } from "@hazae41/network-bundle"
 
 await initBundledOnce()
 
@@ -101,7 +101,7 @@ console.log(totalBigInt)
 #### Proofs
 
 ```tsx
-import { NetworkMixin, base16_decode_mixed, base16_encode_lower, initBundledOnce } from "@hazae41/netbundle"
+import { NetworkMixin, base16_decode_mixed, base16_encode_lower, initBundledOnce } from "@hazae41/network-bundle"
 
 await initBundledOnce()
 

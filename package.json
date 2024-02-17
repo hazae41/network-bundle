@@ -1,10 +1,10 @@
 {
   "type": "module",
-  "name": "@hazae41/netbundle",
+  "name": "@hazae41/network-bundle",
   "version": "1.2.6",
   "description": "WebAssembly bundle for Network algorithms",
-  "homepage": "https://github.com/hazae41/netbundle",
-  "repository": "github:hazae41/netbundle",
+  "homepage": "https://github.com/hazae41/network-bundle",
+  "repository": "github:hazae41/network-bundle",
   "author": "hazae41",
   "license": "Unlicense",
   "main": "./dist/cjs/src/node/index.cjs",
