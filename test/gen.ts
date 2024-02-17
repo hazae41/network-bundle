@@ -1,4 +1,4 @@
-import { Generator, base16_decode_mixed, base16_encode_lower, initBundledOnce } from "@hazae41/netbundle"
+import { NetworkMixin, base16_decode_mixed, base16_encode_lower, initBundledOnce } from "@hazae41/netbundle"
 
 await initBundledOnce()
 
@@ -26,18 +26,23 @@ const receiverMemory = base16_decode_mixed(receiverBase16)
 /**
  * Price
  */
-const priceBigInt = 10n ** 8n
+const priceBigInt = 10000n
 const priceBase16 = priceBigInt.toString(16).padStart(64, "0")
 const priceMemory = base16_decode_mixed(priceBase16)
 
-const generator = new Generator(chainIdMemory, contractMemory, receiverMemory, priceMemory)
+const mixin = new NetworkMixin(chainIdMemory, contractMemory, receiverMemory)
 
 const start = performance.now()
-const generated = generator.generate()
+const generated = mixin.generate(priceMemory)
 const end = performance.now()
 
-const secretsBase16 = base16_encode_lower(generated.encode_secrets())
-const proofsBase16 = base16_encode_lower(generated.encode_proofs())
+const secretsMemory = generated.encode_secrets()
+const secretsBase16 = base16_encode_lower(secretsMemory)
+
+const proofsMemory = generated.encode_proofs()
+const proofsBase16 = base16_encode_lower(proofsMemory)
+
+const verifiedMemory = mixin.verify_secrets(secretsMemory)
 
 const totalBase16 = base16_encode_lower(generated.encode_total())
 const totalBigInt = BigInt("0x" + totalBase16)

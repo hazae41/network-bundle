@@ -18,4 +18,3 @@ base16ct = { version = "=0.2.0", default-features = false, features = ["alloc"] 
 getrandom = { version = "=0.2.10", default-features = false, features = ["js"] }
 rand = { version = "=0.8.5", default-features = false, features = ["std", "std_rng"] }
 crypto-bigint = { version = "=0.5.5", default-features = false }
-console_error_panic_hook = "=0.1.7"

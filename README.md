@@ -18,6 +18,119 @@ npm i @hazae41/netbundle
 - Pre-bundled and streamed
 - Zero-copy memory slices
 
+## Usage
+
+### Generation
+
+```tsx
+import { NetworkMixin, base16_decode_mixed, base16_encode_lower, initBundledOnce } from "@hazae41/netbundle"
+
+await initBundledOnce()
+
+const chainIdBigInt = 1n
+const chainIdBase16 = chainIdBigInt.toString(16).padStart(64, "0")
+const chainIdMemory = base16_decode_mixed(chainIdBase16)
+
+const contractZeroHex = "0xB57ee0797C3fc0205714a577c02F7205bB89dF30"
+const contractBase16 = contractZeroHex.slice(2).padStart(64, "0")
+const contractMemory = base16_decode_mixed(contractBase16)
+
+const receiverZeroHex = "0x5B38Da6a701c568545dCfcB03FcB875f56beddC4"
+const receiverBase16 = receiverZeroHex.slice(2).padStart(64, "0")
+const receiverMemory = base16_decode_mixed(receiverBase16)
+
+const mixinStruct = new NetworkMixin(chainIdMemory, contractMemory, receiverMemory)
+
+const priceBigInt = 10000n
+const priceBase16 = priceBigInt.toString(16).padStart(64, "0")
+const priceMemory = base16_decode_mixed(priceBase16)
+
+const generatedStruct = mixinStruct.generate(priceMemory)
+
+const secretsMemory = generatedStruct.encode_secrets()
+const secretsBase16 = base16_encode_lower(secretsMemory)
+const secretsZeroHex = `0x${secretsBase16}`
+
+const proofsMemory = generatedStruct.encode_proofs()
+const proofsBase16 = base16_encode_lower(proofsMemory)
+const proofsZeroHex = `0x${proofsBase16}`
+
+const totalMemory = generatedStruct.encode_total()
+const totalBase16 = base16_encode_lower(totalMemory)
+const totalZeroHex = `0x${totalBase16}`
+const totalBigInt = BigInt(totalZeroHex)
+
+console.log(totalBigInt, secretsZeroHex, proofsZeroHex)
+```
+
+### Verification
+
+#### Secrets
+
+```tsx
+import { NetworkMixin, base16_decode_mixed, base16_encode_lower, initBundledOnce } from "@hazae41/netbundle"
+
+await initBundledOnce()
+
+const chainIdBigInt = 1n
+const chainIdBase16 = chainIdBigInt.toString(16).padStart(64, "0")
+const chainIdMemory = base16_decode_mixed(chainIdBase16)
+
+const contractZeroHex = "0xB57ee0797C3fc0205714a577c02F7205bB89dF30"
+const contractBase16 = contractZeroHex.slice(2).padStart(64, "0")
+const contractMemory = base16_decode_mixed(contractBase16)
+
+const receiverZeroHex = "0x5B38Da6a701c568545dCfcB03FcB875f56beddC4"
+const receiverBase16 = receiverZeroHex.slice(2).padStart(64, "0")
+const receiverMemory = base16_decode_mixed(receiverBase16)
+
+const mixinStruct = new NetworkMixin(chainIdMemory, contractMemory, receiverMemory)
+
+const secretsZeroHex = "0x..."
+const secretsBase16 = secretsZeroHex.slice(2)
+const secretsMemory = base16_decode_mixed(secretsBase16)
+
+const totalMemory = mixingStruct.verify_secrets(secretsMemory)
+const totalBase16 = base16_encode_lower(totalMemory)
+const totalZeroHex = `0x${totalBase16}`
+const totalBigInt = BigInt(totalZeroHex)
+
+console.log(totalBigInt)
+```
+
+#### Proofs
+
+```tsx
+import { NetworkMixin, base16_decode_mixed, base16_encode_lower, initBundledOnce } from "@hazae41/netbundle"
+
+await initBundledOnce()
+
+const chainIdBigInt = 1n
+const chainIdBase16 = chainIdBigInt.toString(16).padStart(64, "0")
+const chainIdMemory = base16_decode_mixed(chainIdBase16)
+
+const contractZeroHex = "0xB57ee0797C3fc0205714a577c02F7205bB89dF30"
+const contractBase16 = contractZeroHex.slice(2).padStart(64, "0")
+const contractMemory = base16_decode_mixed(contractBase16)
+
+const receiverZeroHex = "0x5B38Da6a701c568545dCfcB03FcB875f56beddC4"
+const receiverBase16 = receiverZeroHex.slice(2).padStart(64, "0")
+const receiverMemory = base16_decode_mixed(receiverBase16)
+
+const mixinStruct = new NetworkMixin(chainIdMemory, contractMemory, receiverMemory)
+
+const proofsZeroHex = "0x..."
+const proofsBase16 = proofsZeroHex.slice(2)
+const proofsMemory = base16_decode_mixed(proofsBase16)
+
+const totalMemory = mixingStruct.verify_proofs(proofsMemory)
+const totalBase16 = base16_encode_lower(totalMemory)
+const totalZeroHex = `0x${totalBase16}`
+const totalBigInt = BigInt(totalZeroHex)
+
+console.log(totalBigInt)
+```
+
 ## Building
 
 ### Unreproducible building

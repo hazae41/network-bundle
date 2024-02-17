@@ -32,41 +32,6 @@ export function base16_decode_upper(text: string): Memory;
 export function keccak256(data: Memory): Memory;
 /**
 */
-export class Generated {
-  [Symbol.dispose](): void
-  free(): void;
-/**
-* @returns {Memory}
-*/
-  encode_secrets(): Memory;
-/**
-* @returns {Memory}
-*/
-  encode_proofs(): Memory;
-/**
-* @returns {Memory}
-*/
-  encode_total(): Memory;
-}
-/**
-*/
-export class Generator {
-  [Symbol.dispose](): void
-  free(): void;
-/**
-* @param {Memory} chain_u64
-* @param {Memory} contract_bytes
-* @param {Memory} receiver_bytes
-* @param {Memory} price_bytes
-*/
-  constructor(chain_u64: Memory, contract_bytes: Memory, receiver_bytes: Memory, price_bytes: Memory);
-/**
-* @returns {Generated}
-*/
-  generate(): Generated;
-}
-/**
-*/
 export class Keccak256Hasher {
   [Symbol.dispose](): void
   free(): void;
@@ -121,7 +86,52 @@ export class Memory {
 }
 /**
 */
-export class Secret {
+export class NetworkGenerated {
+  [Symbol.dispose](): void
+  free(): void;
+/**
+* @returns {Memory}
+*/
+  encode_secrets(): Memory;
+/**
+* @returns {Memory}
+*/
+  encode_proofs(): Memory;
+/**
+* @returns {Memory}
+*/
+  encode_total(): Memory;
+}
+/**
+*/
+export class NetworkMixin {
+  [Symbol.dispose](): void
+  free(): void;
+/**
+* @param {Memory} chain_u64
+* @param {Memory} contract_bytes
+* @param {Memory} receiver_bytes
+*/
+  constructor(chain_u64: Memory, contract_bytes: Memory, receiver_bytes: Memory);
+/**
+* @param {Memory} price_bytes
+* @returns {NetworkGenerated}
+*/
+  generate(price_bytes: Memory): NetworkGenerated;
+/**
+* @param {Memory} secrets_bytes
+* @returns {Memory}
+*/
+  verify_secrets(secrets_bytes: Memory): Memory;
+/**
+* @param {Memory} proofs_bytes
+* @returns {Memory}
+*/
+  verify_proofs(proofs_bytes: Memory): Memory;
+}
+/**
+*/
+export class NetworkSecret {
   [Symbol.dispose](): void
   free(): void;
 }
@@ -130,14 +140,15 @@ export type InitInput = RequestInfo | URL | Response | BufferSource | WebAssembl
 
 export interface InitOutput {
   readonly memory: WebAssembly.Memory;
-  readonly __wbg_secret_free: (a: number) => void;
-  readonly __wbg_generator_free: (a: number) => void;
-  readonly generator_new: (a: number, b: number, c: number, d: number) => number;
-  readonly generator_generate: (a: number) => number;
-  readonly __wbg_generated_free: (a: number) => void;
-  readonly generated_encode_secrets: (a: number) => number;
-  readonly generated_encode_proofs: (a: number) => number;
-  readonly generated_encode_total: (a: number) => number;
+  readonly __wbg_networksecret_free: (a: number) => void;
+  readonly networkmixin_new: (a: number, b: number, c: number) => number;
+  readonly networkmixin_generate: (a: number, b: number) => number;
+  readonly networkmixin_verify_secrets: (a: number, b: number) => number;
+  readonly networkmixin_verify_proofs: (a: number, b: number) => number;
+  readonly __wbg_networkgenerated_free: (a: number) => void;
+  readonly networkgenerated_encode_secrets: (a: number) => number;
+  readonly networkgenerated_encode_proofs: (a: number) => number;
+  readonly networkgenerated_encode_total: (a: number) => number;
   readonly base16_encode_lower: (a: number, b: number) => void;
   readonly base16_encode_upper: (a: number, b: number) => void;
   readonly base16_decode_mixed: (a: number, b: number, c: number) => void;
@@ -149,10 +160,11 @@ export interface InitOutput {
   readonly keccak256hasher_clone: (a: number) => number;
   readonly keccak256hasher_update: (a: number, b: number) => void;
   readonly keccak256hasher_finalize: (a: number) => number;
+  readonly __wbg_memory_free: (a: number) => void;
   readonly memory_new: (a: number, b: number) => number;
   readonly memory_ptr: (a: number) => number;
   readonly memory_len: (a: number) => number;
-  readonly __wbg_memory_free: (a: number) => void;
+  readonly __wbg_networkmixin_free: (a: number) => void;
   readonly __wbindgen_add_to_stack_pointer: (a: number) => number;
   readonly __wbindgen_free: (a: number, b: number, c: number) => void;
   readonly __wbindgen_malloc: (a: number, b: number) => number;
