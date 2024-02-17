@@ -1,7 +1,7 @@
 {
   "type": "module",
   "name": "@hazae41/network-bundle",
-  "version": "1.2.6",
+  "version": "0.0.0",
   "description": "WebAssembly bundle for Network algorithms",
   "homepage": "https://github.com/hazae41/network-bundle",
   "repository": "github:hazae41/network-bundle",
