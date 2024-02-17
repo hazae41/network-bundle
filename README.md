@@ -90,7 +90,7 @@ const secretsZeroHex = "0x..."
 const secretsBase16 = secretsZeroHex.slice(2)
 const secretsMemory = base16_decode_mixed(secretsBase16)
 
-const totalMemory = mixingStruct.verify_secrets(secretsMemory)
+const totalMemory = mixinStruct.verify_secrets(secretsMemory)
 const totalBase16 = base16_encode_lower(totalMemory)
 const totalZeroHex = `0x${totalBase16}`
 const totalBigInt = BigInt(totalZeroHex)
@@ -123,7 +123,7 @@ const proofsZeroHex = "0x..."
 const proofsBase16 = proofsZeroHex.slice(2)
 const proofsMemory = base16_decode_mixed(proofsBase16)
 
-const totalMemory = mixingStruct.verify_proofs(proofsMemory)
+const totalMemory = mixinStruct.verify_proofs(proofsMemory)
 const totalBase16 = base16_encode_lower(totalMemory)
 const totalZeroHex = `0x${totalBase16}`
 const totalBigInt = BigInt(totalZeroHex)
