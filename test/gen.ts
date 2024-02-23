@@ -12,7 +12,7 @@ const chainIdMemory = base16_decode_mixed(chainIdBase16)
 /**
  * Contract address
  */
-const contractZeroHex = "0xB57ee0797C3fc0205714a577c02F7205bB89dF30"
+const contractZeroHex = "0xF1eC047cbd662607BBDE9Badd572cf0A23E1130B"
 const contractBase16 = contractZeroHex.slice(2).padStart(64, "0")
 const contractMemory = base16_decode_mixed(contractBase16)
 
@@ -26,7 +26,7 @@ const receiverMemory = base16_decode_mixed(receiverBase16)
 /**
  * Price
  */
-const priceBigInt = 10000n
+const priceBigInt = 100000n
 const priceBase16 = priceBigInt.toString(16).padStart(64, "0")
 const priceMemory = base16_decode_mixed(priceBase16)
 
@@ -47,7 +47,11 @@ const verifiedMemory = mixin.verify_secrets(secretsMemory)
 const totalBase16 = base16_encode_lower(generated.encode_total())
 const totalBigInt = BigInt("0x" + totalBase16)
 
+const secrets = new Array<string>()
+
 for (let i = 0; i < secretsBase16.length; i += 64)
-  console.log(secretsBase16.slice(i, i + 64), proofsBase16.slice(i, i + 64))
+  secrets.push(`0x${secretsBase16.slice(i, i + 64)}`)
+
+console.log(secrets)
 
 console.log(`Generated ${secretsBase16.length / 64} secrets worth ${totalBigInt} wei in ${end - start}ms`)
