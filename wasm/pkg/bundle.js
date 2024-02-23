@@ -226,12 +226,6 @@ export function base16_decode_upper(text) {
     }
 }
 
-function passArray8ToWasm0(arg, malloc) {
-    const ptr = malloc(arg.length * 1, 1) >>> 0;
-    getUint8Memory0().set(arg, ptr / 1);
-    WASM_VECTOR_LEN = arg.length;
-    return ptr;
-}
 /**
 * @param {Memory} data
 * @returns {Memory}
@@ -240,6 +234,13 @@ export function keccak256(data) {
     _assertClass(data, Memory);
     const ret = wasm.keccak256(data.__wbg_ptr);
     return Memory.__wrap(ret);
+}
+
+function passArray8ToWasm0(arg, malloc) {
+    const ptr = malloc(arg.length * 1, 1) >>> 0;
+    getUint8Memory0().set(arg, ptr / 1);
+    WASM_VECTOR_LEN = arg.length;
+    return ptr;
 }
 
 function handleError(f, args) {
@@ -450,12 +451,14 @@ export class NetworkMixin {
     * @param {Memory} chain_u64
     * @param {Memory} contract_bytes
     * @param {Memory} receiver_bytes
+    * @param {Memory} nonce_bytes
     */
-    constructor(chain_u64, contract_bytes, receiver_bytes) {
+    constructor(chain_u64, contract_bytes, receiver_bytes, nonce_bytes) {
         _assertClass(chain_u64, Memory);
         _assertClass(contract_bytes, Memory);
         _assertClass(receiver_bytes, Memory);
-        const ret = wasm.networkmixin_new(chain_u64.__wbg_ptr, contract_bytes.__wbg_ptr, receiver_bytes.__wbg_ptr);
+        _assertClass(nonce_bytes, Memory);
+        const ret = wasm.networkmixin_new(chain_u64.__wbg_ptr, contract_bytes.__wbg_ptr, receiver_bytes.__wbg_ptr, nonce_bytes.__wbg_ptr);
         return NetworkMixin.__wrap(ret);
     }
     /**
@@ -576,6 +579,10 @@ function __wbg_get_imports() {
         const ret = getObject(arg0).call(getObject(arg1));
         return addHeapObject(ret);
     }, arguments) };
+    imports.wbg.__wbg_call_01734de55d61e11d = function() { return handleError(function (arg0, arg1, arg2) {
+        const ret = getObject(arg0).call(getObject(arg1), getObject(arg2));
+        return addHeapObject(ret);
+    }, arguments) };
     imports.wbg.__wbindgen_object_clone_ref = function(arg0) {
         const ret = getObject(arg0);
         return addHeapObject(ret);
@@ -625,10 +632,6 @@ function __wbg_get_imports() {
         const ret = getStringFromWasm0(arg0, arg1);
         return addHeapObject(ret);
     };
-    imports.wbg.__wbg_call_01734de55d61e11d = function() { return handleError(function (arg0, arg1, arg2) {
-        const ret = getObject(arg0).call(getObject(arg1), getObject(arg2));
-        return addHeapObject(ret);
-    }, arguments) };
     imports.wbg.__wbindgen_memory = function() {
         const ret = wasm.memory;
         return addHeapObject(ret);

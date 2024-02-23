@@ -1,4 +1,4 @@
-import { NetworkMixin, base16_decode_mixed, base16_encode_lower, initBundledOnce } from "@hazae41/network-bundle"
+import { Memory, NetworkMixin, base16_decode_mixed, base16_encode_lower, initBundledOnce } from "@hazae41/network-bundle"
 
 await initBundledOnce()
 
@@ -24,13 +24,20 @@ const receiverBase16 = receiverZeroHex.slice(2).padStart(64, "0")
 const receiverMemory = base16_decode_mixed(receiverBase16)
 
 /**
+ * Nonce
+ */
+const nonceBytes = crypto.getRandomValues(new Uint8Array(32))
+const nonceMemory = new Memory(nonceBytes)
+const nonceBase16 = base16_encode_lower(nonceMemory)
+
+/**
  * Price
  */
 const priceBigInt = 100000n
 const priceBase16 = priceBigInt.toString(16).padStart(64, "0")
 const priceMemory = base16_decode_mixed(priceBase16)
 
-const mixin = new NetworkMixin(chainIdMemory, contractMemory, receiverMemory)
+const mixin = new NetworkMixin(chainIdMemory, contractMemory, receiverMemory, nonceMemory)
 
 const start = performance.now()
 const generated = mixin.generate(priceMemory)

@@ -111,8 +111,9 @@ export class NetworkMixin {
 * @param {Memory} chain_u64
 * @param {Memory} contract_bytes
 * @param {Memory} receiver_bytes
+* @param {Memory} nonce_bytes
 */
-  constructor(chain_u64: Memory, contract_bytes: Memory, receiver_bytes: Memory);
+  constructor(chain_u64: Memory, contract_bytes: Memory, receiver_bytes: Memory, nonce_bytes: Memory);
 /**
 * @param {Memory} price_bytes
 * @returns {NetworkGenerated}
@@ -141,7 +142,7 @@ export type InitInput = RequestInfo | URL | Response | BufferSource | WebAssembl
 export interface InitOutput {
   readonly memory: WebAssembly.Memory;
   readonly __wbg_networksecret_free: (a: number) => void;
-  readonly networkmixin_new: (a: number, b: number, c: number) => number;
+  readonly networkmixin_new: (a: number, b: number, c: number, d: number) => number;
   readonly networkmixin_generate: (a: number, b: number) => number;
   readonly networkmixin_verify_secrets: (a: number, b: number) => number;
   readonly networkmixin_verify_proofs: (a: number, b: number) => number;
@@ -154,16 +155,16 @@ export interface InitOutput {
   readonly base16_decode_mixed: (a: number, b: number, c: number) => void;
   readonly base16_decode_lower: (a: number, b: number, c: number) => void;
   readonly base16_decode_upper: (a: number, b: number, c: number) => void;
-  readonly __wbg_memory_free: (a: number) => void;
-  readonly memory_new: (a: number, b: number) => number;
-  readonly memory_ptr: (a: number) => number;
-  readonly memory_len: (a: number) => number;
   readonly keccak256: (a: number) => number;
   readonly __wbg_keccak256hasher_free: (a: number) => void;
   readonly keccak256hasher_new: () => number;
   readonly keccak256hasher_clone: (a: number) => number;
   readonly keccak256hasher_update: (a: number, b: number) => void;
   readonly keccak256hasher_finalize: (a: number) => number;
+  readonly __wbg_memory_free: (a: number) => void;
+  readonly memory_new: (a: number, b: number) => number;
+  readonly memory_ptr: (a: number) => number;
+  readonly memory_len: (a: number) => number;
   readonly __wbg_networkmixin_free: (a: number) => void;
   readonly __wbindgen_add_to_stack_pointer: (a: number) => number;
   readonly __wbindgen_free: (a: number, b: number, c: number) => void;

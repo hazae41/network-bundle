@@ -23,7 +23,7 @@ npm i @hazae41/network-bundle
 ### Generation
 
 ```tsx
-import { NetworkMixin, base16_decode_mixed, base16_encode_lower, initBundledOnce } from "@hazae41/network-bundle"
+import { NetworkMixin, base16_decode_mixed, base16_encode_lower, initBundledOnce, Memory } from "@hazae41/network-bundle"
 
 await initBundledOnce()
 
@@ -39,7 +39,11 @@ const receiverZeroHex = "0x5B38Da6a701c568545dCfcB03FcB875f56beddC4"
 const receiverBase16 = receiverZeroHex.slice(2).padStart(64, "0")
 const receiverMemory = base16_decode_mixed(receiverBase16)
 
-const mixinStruct = new NetworkMixin(chainIdMemory, contractMemory, receiverMemory)
+const nonceBytes = crypto.getRandomValues(new Uint8Array(32))
+const nonceMemory = new Memory(nonceBytes)
+const nonceBase16 = base16_encode_lower(nonceMemory)
+
+const mixinStruct = new NetworkMixin(chainIdMemory, contractMemory, receiverMemory, nonceMemory)
 
 const priceBigInt = 10000n
 const priceBase16 = priceBigInt.toString(16).padStart(64, "0")
