@@ -48,11 +48,17 @@ pub struct NetworkMixin {
 #[wasm_bindgen]
 impl NetworkMixin {
     #[wasm_bindgen(constructor)]
-    pub fn new(chain_u64: &Memory, contract_bytes: &Memory, receiver_bytes: &Memory) -> Self {
-        let mut mixin_bytes = vec![0u8; 128];
+    pub fn new(
+        chain_u64: &Memory,
+        contract_bytes: &Memory,
+        receiver_bytes: &Memory,
+        nonce_bytes: &Memory,
+    ) -> Self {
+        let mut mixin_bytes = vec![0u8; 160];
         mixin_bytes[0..32].clone_from_slice(&chain_u64.inner);
         mixin_bytes[32..64].clone_from_slice(&contract_bytes.inner);
         mixin_bytes[64..96].clone_from_slice(&receiver_bytes.inner);
+        mixin_bytes[96..128].clone_from_slice(&nonce_bytes.inner);
 
         Self { mixin_bytes }
     }
@@ -75,7 +81,7 @@ impl NetworkMixin {
             proof_hasher.update(&mut secret_bytes);
             let proof_bytes = proof_hasher.finalize();
 
-            self.mixin_bytes[96..128].copy_from_slice(&proof_bytes);
+            self.mixin_bytes[128..160].copy_from_slice(&proof_bytes);
 
             let mut divisor_hasher = sha3::Keccak256::new();
             divisor_hasher.update(&mut self.mixin_bytes);
@@ -131,7 +137,7 @@ impl NetworkMixin {
             proof_hasher.update(secret_bytes);
             let proof_bytes = proof_hasher.finalize();
 
-            self.mixin_bytes[96..128].copy_from_slice(&proof_bytes);
+            self.mixin_bytes[128..160].copy_from_slice(&proof_bytes);
 
             let mut divisor_hasher = sha3::Keccak256::new();
             divisor_hasher.update(&mut self.mixin_bytes);
@@ -160,7 +166,7 @@ impl NetworkMixin {
         let mut total_u256 = U256::ZERO;
 
         for proof_bytes in proofs_chunks {
-            self.mixin_bytes[96..128].copy_from_slice(proof_bytes);
+            self.mixin_bytes[128..160].copy_from_slice(proof_bytes);
 
             let mut divisor_hasher = sha3::Keccak256::new();
             divisor_hasher.update(&mut self.mixin_bytes);
