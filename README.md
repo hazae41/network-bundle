@@ -1,6 +1,6 @@
 # Network Bundle
 
-WebAssembly bundle for Network algorithms
+WebAssembly bundle for [Network](https://github.com/stars/hazae41/lists/network) algorithms
 
 ```bash
 npm i @hazae41/network-bundle
