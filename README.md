@@ -22,16 +22,18 @@ npm i @hazae41/network-bundle
 
 ### Generation
 
+You can generate and retrieve a secret, proof and value.
+
 ```tsx
-import { NetworkMixin, base16_decode_mixed, base16_encode_lower, initBundledOnce, Memory } from "@hazae41/network-bundle"
+import { Memory, NetworkMixin, base16_decode_mixed, base16_encode_lower, initBundledOnce } from "@hazae41/network-bundle"
 
 await initBundledOnce()
 
-const chainIdBigInt = 1n
+const chainIdBigInt = 100n
 const chainIdBase16 = chainIdBigInt.toString(16).padStart(64, "0")
 const chainIdMemory = base16_decode_mixed(chainIdBase16)
 
-const contractZeroHex = "0xB57ee0797C3fc0205714a577c02F7205bB89dF30"
+const contractZeroHex = "0xF1eC047cbd662607BBDE9Badd572cf0A23E1130B"
 const contractBase16 = contractZeroHex.slice(2).padStart(64, "0")
 const contractMemory = base16_decode_mixed(contractBase16)
 
@@ -43,96 +45,110 @@ const nonceBytes = crypto.getRandomValues(new Uint8Array(32))
 const nonceMemory = new Memory(nonceBytes)
 const nonceBase16 = base16_encode_lower(nonceMemory)
 
-const mixinStruct = new NetworkMixin(chainIdMemory, contractMemory, receiverMemory, nonceMemory)
+const minimumBigInt = 100000n
+const minimumBase16 = minimumBigInt.toString(16).padStart(64, "0")
+const minimumMemory = base16_decode_mixed(minimumBase16)
 
-const priceBigInt = 10000n
-const priceBase16 = priceBigInt.toString(16).padStart(64, "0")
-const priceMemory = base16_decode_mixed(priceBase16)
+const mixin = new NetworkMixin(chainIdMemory, contractMemory, receiverMemory, nonceMemory)
 
-const generatedStruct = mixinStruct.generate(priceMemory)
+const generated = mixin.generate(minimumMemory)
 
-const secretsMemory = generatedStruct.encode_secrets()
-const secretsBase16 = base16_encode_lower(secretsMemory)
-const secretsZeroHex = `0x${secretsBase16}`
+const secretMemory = generated.to_secret()
+const secretBase16 = base16_encode_lower(secretMemory)
+const secretZeroHex = `0x${secretBase16}`
 
-const proofsMemory = generatedStruct.encode_proofs()
-const proofsBase16 = base16_encode_lower(proofsMemory)
-const proofsZeroHex = `0x${proofsBase16}`
+const proofMemory = generated.to_proof()
+const proofBase16 = base16_encode_lower(proofMemory)
+const proofZeroHex = `0x${proofBase16}`
 
-const totalMemory = generatedStruct.encode_total()
-const totalBase16 = base16_encode_lower(totalMemory)
-const totalZeroHex = `0x${totalBase16}`
-const totalBigInt = BigInt(totalZeroHex)
+const valueMemory = generated.to_value()
+const valueBase16 = base16_encode_lower(valueMemory)
+const valueZeroHex = `0x${valueBase16}`
+const valueBigInt = BigInt(valueZeroHex)
 
-console.log(totalBigInt, secretsZeroHex, proofsZeroHex)
+console.log(valueBigInt, secretZeroHex, proofZeroHex)
 ```
 
 ### Verification
 
-#### Secrets
+#### Secret
+
+You can verify the value of a secret.
 
 ```tsx
 import { NetworkMixin, base16_decode_mixed, base16_encode_lower, initBundledOnce } from "@hazae41/network-bundle"
 
-await initBundledOnce()
+async function verify(secretZeroHex: string, nonceZeroHex: string): Promise<bigint> {
+  await initBundledOnce()
 
-const chainIdBigInt = 1n
-const chainIdBase16 = chainIdBigInt.toString(16).padStart(64, "0")
-const chainIdMemory = base16_decode_mixed(chainIdBase16)
+  const chainIdBigInt = 100n
+  const chainIdBase16 = chainIdBigInt.toString(16).padStart(64, "0")
+  const chainIdMemory = base16_decode_mixed(chainIdBase16)
 
-const contractZeroHex = "0xB57ee0797C3fc0205714a577c02F7205bB89dF30"
-const contractBase16 = contractZeroHex.slice(2).padStart(64, "0")
-const contractMemory = base16_decode_mixed(contractBase16)
+  const contractZeroHex = "0xF1eC047cbd662607BBDE9Badd572cf0A23E1130B"
+  const contractBase16 = contractZeroHex.slice(2).padStart(64, "0")
+  const contractMemory = base16_decode_mixed(contractBase16)
 
-const receiverZeroHex = "0x5B38Da6a701c568545dCfcB03FcB875f56beddC4"
-const receiverBase16 = receiverZeroHex.slice(2).padStart(64, "0")
-const receiverMemory = base16_decode_mixed(receiverBase16)
+  const receiverZeroHex = "0x5B38Da6a701c568545dCfcB03FcB875f56beddC4"
+  const receiverBase16 = receiverZeroHex.slice(2).padStart(64, "0")
+  const receiverMemory = base16_decode_mixed(receiverBase16)
 
-const mixinStruct = new NetworkMixin(chainIdMemory, contractMemory, receiverMemory)
+  const nonceBase16 = nonceZeroHex.slice(2)
+  const nonceMemory = base16_decode_mixed(nonceBase16)
 
-const secretsZeroHex = "0x..."
-const secretsBase16 = secretsZeroHex.slice(2)
-const secretsMemory = base16_decode_mixed(secretsBase16)
+  const mixinStruct = new NetworkMixin(chainIdMemory, contractMemory, receiverMemory, nonceMemory)
 
-const totalMemory = mixinStruct.verify_secrets(secretsMemory)
-const totalBase16 = base16_encode_lower(totalMemory)
-const totalZeroHex = `0x${totalBase16}`
-const totalBigInt = BigInt(totalZeroHex)
+  const secretBase16 = secretZeroHex.slice(2)
+  const secretMemory = base16_decode_mixed(secretBase16)
 
-console.log(totalBigInt)
+  const valueMemory = mixinStruct.verify_secret(secretMemory)
+  const valueBase16 = base16_encode_lower(valueMemory)
+  const valueZeroHex = `0x${valueBase16}`
+  const valueBigInt = BigInt(valueZeroHex)
+
+  return valueBigInt
+}
 ```
 
-#### Proofs
+#### Proof
+
+You can zero-knowledge verify the value of a secret by using its proof.
+
+Proofs should only account half their value because they can be spoofed for half the work.
 
 ```tsx
 import { NetworkMixin, base16_decode_mixed, base16_encode_lower, initBundledOnce } from "@hazae41/network-bundle"
 
-await initBundledOnce()
+function preverify(proofZeroHex: string, nonceZeroHex: string): Promise<bigint> {
+  await initBundledOnce()
 
-const chainIdBigInt = 1n
-const chainIdBase16 = chainIdBigInt.toString(16).padStart(64, "0")
-const chainIdMemory = base16_decode_mixed(chainIdBase16)
+  const chainIdBigInt = 100n
+  const chainIdBase16 = chainIdBigInt.toString(16).padStart(64, "0")
+  const chainIdMemory = base16_decode_mixed(chainIdBase16)
 
-const contractZeroHex = "0xB57ee0797C3fc0205714a577c02F7205bB89dF30"
-const contractBase16 = contractZeroHex.slice(2).padStart(64, "0")
-const contractMemory = base16_decode_mixed(contractBase16)
+  const contractZeroHex = "0xF1eC047cbd662607BBDE9Badd572cf0A23E1130B"
+  const contractBase16 = contractZeroHex.slice(2).padStart(64, "0")
+  const contractMemory = base16_decode_mixed(contractBase16)
 
-const receiverZeroHex = "0x5B38Da6a701c568545dCfcB03FcB875f56beddC4"
-const receiverBase16 = receiverZeroHex.slice(2).padStart(64, "0")
-const receiverMemory = base16_decode_mixed(receiverBase16)
+  const receiverZeroHex = "0x5B38Da6a701c568545dCfcB03FcB875f56beddC4"
+  const receiverBase16 = receiverZeroHex.slice(2).padStart(64, "0")
+  const receiverMemory = base16_decode_mixed(receiverBase16)
 
-const mixinStruct = new NetworkMixin(chainIdMemory, contractMemory, receiverMemory)
+  const nonceBase16 = nonceZeroHex.slice(2)
+  const nonceMemory = base16_decode_mixed(nonceBase16)
 
-const proofsZeroHex = "0x..."
-const proofsBase16 = proofsZeroHex.slice(2)
-const proofsMemory = base16_decode_mixed(proofsBase16)
+  const mixinStruct = new NetworkMixin(chainIdMemory, contractMemory, receiverMemory, nonceMemory)
 
-const totalMemory = mixinStruct.verify_proofs(proofsMemory)
-const totalBase16 = base16_encode_lower(totalMemory)
-const totalZeroHex = `0x${totalBase16}`
-const totalBigInt = BigInt(totalZeroHex)
+  const proofBase16 = proofZeroHex.slice(2)
+  const proofMemory = base16_decode_mixed(proofBase16)
 
-console.log(totalBigInt)
+  const valueMemory = mixinStruct.verify_proof(proofMemory)
+  const valueBase16 = base16_encode_lower(valueMemory)
+  const valueZeroHex = `0x${valueBase16}`
+  const valueBigInt = BigInt(valueZeroHex)
+
+  return valueBigInt / 2
+}
 ```
 
 ## Building

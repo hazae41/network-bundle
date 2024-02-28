@@ -86,55 +86,49 @@ export class Memory {
 }
 /**
 */
-export class NetworkGenerated {
-  [Symbol.dispose](): void
-  free(): void;
-/**
-* @returns {Memory}
-*/
-  encode_secrets(): Memory;
-/**
-* @returns {Memory}
-*/
-  encode_proofs(): Memory;
-/**
-* @returns {Memory}
-*/
-  encode_total(): Memory;
-}
-/**
-*/
 export class NetworkMixin {
   [Symbol.dispose](): void
   free(): void;
 /**
-* @param {Memory} chain_u64
-* @param {Memory} contract_bytes
-* @param {Memory} receiver_bytes
-* @param {Memory} nonce_bytes
+* @param {Memory} chain_memory
+* @param {Memory} contract_memory
+* @param {Memory} receiver_nonce
+* @param {Memory} nonce_memory
 */
-  constructor(chain_u64: Memory, contract_bytes: Memory, receiver_bytes: Memory, nonce_bytes: Memory);
+  constructor(chain_memory: Memory, contract_memory: Memory, receiver_nonce: Memory, nonce_memory: Memory);
 /**
-* @param {Memory} price_bytes
-* @returns {NetworkGenerated}
+* @param {Memory} minimum_memory
+* @returns {NetworkSecret}
 */
-  generate(price_bytes: Memory): NetworkGenerated;
+  generate(minimum_memory: Memory): NetworkSecret;
 /**
-* @param {Memory} secrets_bytes
+* @param {Memory} secret_memory
 * @returns {Memory}
 */
-  verify_secrets(secrets_bytes: Memory): Memory;
+  verify_secret(secret_memory: Memory): Memory;
 /**
-* @param {Memory} proofs_bytes
+* @param {Memory} proof_memory
 * @returns {Memory}
 */
-  verify_proofs(proofs_bytes: Memory): Memory;
+  verify_proof(proof_memory: Memory): Memory;
 }
 /**
 */
 export class NetworkSecret {
   [Symbol.dispose](): void
   free(): void;
+/**
+* @returns {Memory}
+*/
+  to_secret(): Memory;
+/**
+* @returns {Memory}
+*/
+  to_proof(): Memory;
+/**
+* @returns {Memory}
+*/
+  to_value(): Memory;
 }
 
 export type InitInput = RequestInfo | URL | Response | BufferSource | WebAssembly.Module;
@@ -142,29 +136,28 @@ export type InitInput = RequestInfo | URL | Response | BufferSource | WebAssembl
 export interface InitOutput {
   readonly memory: WebAssembly.Memory;
   readonly __wbg_networksecret_free: (a: number) => void;
+  readonly networksecret_to_secret: (a: number) => number;
+  readonly networksecret_to_proof: (a: number) => number;
+  readonly networksecret_to_value: (a: number) => number;
   readonly networkmixin_new: (a: number, b: number, c: number, d: number) => number;
   readonly networkmixin_generate: (a: number, b: number) => number;
-  readonly networkmixin_verify_secrets: (a: number, b: number) => number;
-  readonly networkmixin_verify_proofs: (a: number, b: number) => number;
-  readonly __wbg_networkgenerated_free: (a: number) => void;
-  readonly networkgenerated_encode_secrets: (a: number) => number;
-  readonly networkgenerated_encode_proofs: (a: number) => number;
-  readonly networkgenerated_encode_total: (a: number) => number;
+  readonly networkmixin_verify_secret: (a: number, b: number) => number;
+  readonly networkmixin_verify_proof: (a: number, b: number) => number;
   readonly base16_encode_lower: (a: number, b: number) => void;
   readonly base16_encode_upper: (a: number, b: number) => void;
   readonly base16_decode_mixed: (a: number, b: number, c: number) => void;
   readonly base16_decode_lower: (a: number, b: number, c: number) => void;
   readonly base16_decode_upper: (a: number, b: number, c: number) => void;
-  readonly __wbg_memory_free: (a: number) => void;
-  readonly memory_new: (a: number, b: number) => number;
-  readonly memory_ptr: (a: number) => number;
-  readonly memory_len: (a: number) => number;
   readonly keccak256: (a: number) => number;
   readonly __wbg_keccak256hasher_free: (a: number) => void;
   readonly keccak256hasher_new: () => number;
   readonly keccak256hasher_clone: (a: number) => number;
   readonly keccak256hasher_update: (a: number, b: number) => void;
   readonly keccak256hasher_finalize: (a: number) => number;
+  readonly __wbg_memory_free: (a: number) => void;
+  readonly memory_new: (a: number, b: number) => number;
+  readonly memory_ptr: (a: number) => number;
+  readonly memory_len: (a: number) => number;
   readonly __wbg_networkmixin_free: (a: number) => void;
   readonly __wbindgen_add_to_stack_pointer: (a: number) => number;
   readonly __wbindgen_free: (a: number, b: number, c: number) => void;

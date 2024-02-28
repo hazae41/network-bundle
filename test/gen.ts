@@ -5,7 +5,7 @@ await initBundledOnce()
 /**
  * Chain ID
  */
-const chainIdBigInt = 1n
+const chainIdBigInt = 100n
 const chainIdBase16 = chainIdBigInt.toString(16).padStart(64, "0")
 const chainIdMemory = base16_decode_mixed(chainIdBase16)
 
@@ -33,32 +33,25 @@ const nonceBase16 = base16_encode_lower(nonceMemory)
 /**
  * Price
  */
-const priceBigInt = 100000n
-const priceBase16 = priceBigInt.toString(16).padStart(64, "0")
-const priceMemory = base16_decode_mixed(priceBase16)
+const minimumBigInt = 100000n
+const minimumBase16 = minimumBigInt.toString(16).padStart(64, "0")
+const minimumMemory = base16_decode_mixed(minimumBase16)
 
 const mixin = new NetworkMixin(chainIdMemory, contractMemory, receiverMemory, nonceMemory)
 
 const start = performance.now()
-const generated = mixin.generate(priceMemory)
+const generated = mixin.generate(minimumMemory)
 const end = performance.now()
 
-const secretsMemory = generated.encode_secrets()
-const secretsBase16 = base16_encode_lower(secretsMemory)
+const secretMemory = generated.to_secret()
+const secretBase16 = base16_encode_lower(secretMemory)
 
-const proofsMemory = generated.encode_proofs()
-const proofsBase16 = base16_encode_lower(proofsMemory)
+const proofMemory = generated.to_proof()
+const proofBase16 = base16_encode_lower(proofMemory)
 
-const verifiedMemory = mixin.verify_secrets(secretsMemory)
+const valueBase16 = base16_encode_lower(generated.to_value())
+const valueBigInt = BigInt("0x" + valueBase16)
 
-const totalBase16 = base16_encode_lower(generated.encode_total())
-const totalBigInt = BigInt("0x" + totalBase16)
+console.log(valueBigInt, secretBase16, proofBase16)
 
-const secrets = new Array<string>()
-
-for (let i = 0; i < secretsBase16.length; i += 64)
-  secrets.push(`0x${secretsBase16.slice(i, i + 64)}`)
-
-console.log(secrets)
-
-console.log(`Generated ${secretsBase16.length / 64} secrets worth ${totalBigInt} wei in ${end - start}ms`)
+console.log(`Generated ${valueBigInt} wei in ${end - start}ms`)

@@ -226,12 +226,6 @@ export function base16_decode_upper(text) {
     }
 }
 
-function passArray8ToWasm0(arg, malloc) {
-    const ptr = malloc(arg.length * 1, 1) >>> 0;
-    getUint8Memory0().set(arg, ptr / 1);
-    WASM_VECTOR_LEN = arg.length;
-    return ptr;
-}
 /**
 * @param {Memory} data
 * @returns {Memory}
@@ -240,6 +234,13 @@ export function keccak256(data) {
     _assertClass(data, Memory);
     const ret = wasm.keccak256(data.__wbg_ptr);
     return Memory.__wrap(ret);
+}
+
+function passArray8ToWasm0(arg, malloc) {
+    const ptr = malloc(arg.length * 1, 1) >>> 0;
+    getUint8Memory0().set(arg, ptr / 1);
+    WASM_VECTOR_LEN = arg.length;
+    return ptr;
 }
 
 function handleError(f, args) {
@@ -372,55 +373,6 @@ export class Memory {
 }
 /**
 */
-export class NetworkGenerated {
-
-    static __wrap(ptr) {
-        ptr = ptr >>> 0;
-        const obj = Object.create(NetworkGenerated.prototype);
-        obj.__wbg_ptr = ptr;
-
-        return obj;
-    }
-
-    __destroy_into_raw() {
-        const ptr = this.__wbg_ptr;
-        this.__wbg_ptr = 0;
-
-        return ptr;
-    }
-
-    [Symbol.dispose]() {
-        this.free()
-    }
-
-    free() {
-        const ptr = this.__destroy_into_raw();
-        wasm.__wbg_networkgenerated_free(ptr);
-    }
-    /**
-    * @returns {Memory}
-    */
-    encode_secrets() {
-        const ret = wasm.networkgenerated_encode_secrets(this.__wbg_ptr);
-        return Memory.__wrap(ret);
-    }
-    /**
-    * @returns {Memory}
-    */
-    encode_proofs() {
-        const ret = wasm.networkgenerated_encode_proofs(this.__wbg_ptr);
-        return Memory.__wrap(ret);
-    }
-    /**
-    * @returns {Memory}
-    */
-    encode_total() {
-        const ret = wasm.networkgenerated_encode_total(this.__wbg_ptr);
-        return Memory.__wrap(ret);
-    }
-}
-/**
-*/
 export class NetworkMixin {
 
     static __wrap(ptr) {
@@ -447,50 +399,58 @@ export class NetworkMixin {
         wasm.__wbg_networkmixin_free(ptr);
     }
     /**
-    * @param {Memory} chain_u64
-    * @param {Memory} contract_bytes
-    * @param {Memory} receiver_bytes
-    * @param {Memory} nonce_bytes
+    * @param {Memory} chain_memory
+    * @param {Memory} contract_memory
+    * @param {Memory} receiver_nonce
+    * @param {Memory} nonce_memory
     */
-    constructor(chain_u64, contract_bytes, receiver_bytes, nonce_bytes) {
-        _assertClass(chain_u64, Memory);
-        _assertClass(contract_bytes, Memory);
-        _assertClass(receiver_bytes, Memory);
-        _assertClass(nonce_bytes, Memory);
-        const ret = wasm.networkmixin_new(chain_u64.__wbg_ptr, contract_bytes.__wbg_ptr, receiver_bytes.__wbg_ptr, nonce_bytes.__wbg_ptr);
+    constructor(chain_memory, contract_memory, receiver_nonce, nonce_memory) {
+        _assertClass(chain_memory, Memory);
+        _assertClass(contract_memory, Memory);
+        _assertClass(receiver_nonce, Memory);
+        _assertClass(nonce_memory, Memory);
+        const ret = wasm.networkmixin_new(chain_memory.__wbg_ptr, contract_memory.__wbg_ptr, receiver_nonce.__wbg_ptr, nonce_memory.__wbg_ptr);
         return NetworkMixin.__wrap(ret);
     }
     /**
-    * @param {Memory} price_bytes
-    * @returns {NetworkGenerated}
+    * @param {Memory} minimum_memory
+    * @returns {NetworkSecret}
     */
-    generate(price_bytes) {
-        _assertClass(price_bytes, Memory);
-        const ret = wasm.networkmixin_generate(this.__wbg_ptr, price_bytes.__wbg_ptr);
-        return NetworkGenerated.__wrap(ret);
+    generate(minimum_memory) {
+        _assertClass(minimum_memory, Memory);
+        const ret = wasm.networkmixin_generate(this.__wbg_ptr, minimum_memory.__wbg_ptr);
+        return NetworkSecret.__wrap(ret);
     }
     /**
-    * @param {Memory} secrets_bytes
+    * @param {Memory} secret_memory
     * @returns {Memory}
     */
-    verify_secrets(secrets_bytes) {
-        _assertClass(secrets_bytes, Memory);
-        const ret = wasm.networkmixin_verify_secrets(this.__wbg_ptr, secrets_bytes.__wbg_ptr);
+    verify_secret(secret_memory) {
+        _assertClass(secret_memory, Memory);
+        const ret = wasm.networkmixin_verify_secret(this.__wbg_ptr, secret_memory.__wbg_ptr);
         return Memory.__wrap(ret);
     }
     /**
-    * @param {Memory} proofs_bytes
+    * @param {Memory} proof_memory
     * @returns {Memory}
     */
-    verify_proofs(proofs_bytes) {
-        _assertClass(proofs_bytes, Memory);
-        const ret = wasm.networkmixin_verify_proofs(this.__wbg_ptr, proofs_bytes.__wbg_ptr);
+    verify_proof(proof_memory) {
+        _assertClass(proof_memory, Memory);
+        const ret = wasm.networkmixin_verify_proof(this.__wbg_ptr, proof_memory.__wbg_ptr);
         return Memory.__wrap(ret);
     }
 }
 /**
 */
 export class NetworkSecret {
+
+    static __wrap(ptr) {
+        ptr = ptr >>> 0;
+        const obj = Object.create(NetworkSecret.prototype);
+        obj.__wbg_ptr = ptr;
+
+        return obj;
+    }
 
     __destroy_into_raw() {
         const ptr = this.__wbg_ptr;
@@ -506,6 +466,27 @@ export class NetworkSecret {
     free() {
         const ptr = this.__destroy_into_raw();
         wasm.__wbg_networksecret_free(ptr);
+    }
+    /**
+    * @returns {Memory}
+    */
+    to_secret() {
+        const ret = wasm.networksecret_to_secret(this.__wbg_ptr);
+        return Memory.__wrap(ret);
+    }
+    /**
+    * @returns {Memory}
+    */
+    to_proof() {
+        const ret = wasm.networksecret_to_proof(this.__wbg_ptr);
+        return Memory.__wrap(ret);
+    }
+    /**
+    * @returns {Memory}
+    */
+    to_value() {
+        const ret = wasm.networksecret_to_value(this.__wbg_ptr);
+        return Memory.__wrap(ret);
     }
 }
 
@@ -578,6 +559,10 @@ function __wbg_get_imports() {
         const ret = getObject(arg0).call(getObject(arg1));
         return addHeapObject(ret);
     }, arguments) };
+    imports.wbg.__wbg_call_01734de55d61e11d = function() { return handleError(function (arg0, arg1, arg2) {
+        const ret = getObject(arg0).call(getObject(arg1), getObject(arg2));
+        return addHeapObject(ret);
+    }, arguments) };
     imports.wbg.__wbindgen_object_clone_ref = function(arg0) {
         const ret = getObject(arg0);
         return addHeapObject(ret);
@@ -627,10 +612,6 @@ function __wbg_get_imports() {
         const ret = getStringFromWasm0(arg0, arg1);
         return addHeapObject(ret);
     };
-    imports.wbg.__wbg_call_01734de55d61e11d = function() { return handleError(function (arg0, arg1, arg2) {
-        const ret = getObject(arg0).call(getObject(arg1), getObject(arg2));
-        return addHeapObject(ret);
-    }, arguments) };
     imports.wbg.__wbindgen_memory = function() {
         const ret = wasm.memory;
         return addHeapObject(ret);
